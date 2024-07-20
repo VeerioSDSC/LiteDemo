@@ -23,7 +23,9 @@ jobs:
           python -m pip install -r requirements.txt
           python -m pip install jupyterlab-open-url-parameter
           python -m pip install jupyterlab-night
-          python install.py
+          python -m pip pip install nbconvert
+          jupyter nbconvert --to script SettingUpNotebook.ipynb
+          python SettingUpNotebook.py
       - name: Build the JupyterLite site
         run: |
           cp README.md content
