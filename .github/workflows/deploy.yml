@@ -23,6 +23,7 @@ jobs:
           python -m pip install -r requirements.txt
           python -m pip install jupyterlab-open-url-parameter
           python -m pip install jupyterlab-night
+          python install.py
       - name: Build the JupyterLite site
         run: |
           cp README.md content
