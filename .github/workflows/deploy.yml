@@ -18,20 +18,12 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: checkout open-url-parameter
-        uses: actions/checkout@v2
-        with:
-          repository: jupyterlab-contrib/jupyterlab-open-url-parameter
-          path: jupyterlab-open-url-parameter
-      - name: install it
-        working-directory: jupyterlab-open-url-parameter
-        run: |
-          pip install . 
       - name: Install the dependencies
         run: |
           python -m pip install -r requirements.txt
           python -m pip install jupyterlab-night
-          python -m pip download --only-binary :all: --dest content --no-cache healpy-0.1.dev1885+g71d9336-py3-none-any.whl
+          python -m pip install jupyterlab-open-url-parameter
+          jupyter labextension list
       - name: Build the JupyterLite site
         run: |
           cp README.md content
