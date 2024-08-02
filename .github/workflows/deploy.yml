@@ -10,6 +10,7 @@ on:
 
 jobs:
   build:
+    name: Create A File + Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -18,21 +19,39 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - uses: actions/checkout@v2
+      - uses: 1arp/create-a-file-action@0.4.5
+        with:
+          path: '/'
+          isAbsolutePath: false
+          file: 'testing.ipynb'
+          content: |
+            {"metadata":{"kernelspec":{"name":"python","display_name":"Python (Pyodide)","language":"python"},"language_info":{"codemirror_mode":{"name":"python","version":3},"file_extension":".py","mimetype":"text/x-python","name":"python","nbconvert_exporter":"python","pygments_lexer":"ipython3","version":"3.8"}},"nbformat_minor":5,"nbformat":4,"cells":[{"id":"3a8c9bfa","cell_type":"code","source":"import micropip\nfile1 = open('URLs.txt', 'r')\nURLs = file1.readlines()\nfor URL in URLs:\n  await micropip.install(URL)","metadata":{"trusted":true},"outputs":[],"execution_count":2},{"id":"d43a48a5-4d8c-48c6-859d-7dc56ce5a9a3","cell_type":"code","source":"","metadata":{"trusted":true},"outputs":[],"execution_count":null},{"id":"ab9770fa-a30f-4268-bf80-52b0e1a9981b","cell_type":"code","source":"","metadata":{"trusted":true},"outputs":[],"execution_count":null}]}
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          repository: eshaank1/jupyterlab-open-url-dataset
+          path: jupyterlab-open-url-dataset
+      - name: install urldataset
+        working-directory: jupyterlab-open-url-dataset
+        run: |
+          pip install -e .
       - name: Install the dependencies
         run: |
           python -m pip install -r requirements.txt
-          python -m pip install jupyterlab-night
-          python -m pip install jupyterlab-open-url-parameter
+          pip install pyodide-build
           jupyter labextension list
+          cat jupyterlab-open-url-dataset/docs/jupyter-lite.json
       - name: Build the JupyterLite site
         run: |
+          pwd
+          ls
           cp README.md content
-          jupyter lite build --contents content --output-dir dist
+          jupyter lite build --contents content --output-dir jup
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
-
+          path: jup
   deploy:
     needs: build
     if: github.ref == 'refs/heads/main'
